@@ -1,0 +1,9 @@
+FROM rust:1.68.2
+
+WORKDIR /src
+ENV RUST_BACKTRACE 1
+
+COPY . .
+
+ENTRYPOINT ["cargo", "run"]
+EXPOSE 8080

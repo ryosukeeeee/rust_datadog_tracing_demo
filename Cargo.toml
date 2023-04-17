@@ -1,0 +1,32 @@
+[package]
+name = "rust_datadog_tracing_demo"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+axum = "0.5"
+tokio = { version = "1.0", features = ["full"] }
+tower-http = { version = "0.2.1", features = ["trace"] }
+tower = { version = "0.4.11", features = ["timeout"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.82"
+serde_with = "2.2.0"
+chrono = { version = "0.4.20", features = ["serde"] }
+reqwest = "0.11"
+
+# tracing
+tracing = "0.1.36"
+tracing-opentelemetry = { version = "0.18.0", default-features = false }
+tracing-subscriber = { version = "0.3.2", default-features = false, features = [
+    "alloc",
+    "json",
+    "fmt",
+    "env-filter"
+] }
+
+# OpenTelemetry
+opentelemetry = { version = "0.18.0", features = ["rt-tokio"] }
+opentelemetry-datadog = { version = "0.6.0", features = ["reqwest-client"] }
+opentelemetry-http = "0.7.0"

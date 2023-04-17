@@ -1,0 +1,41 @@
+version: "3"
+services:
+  demo:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    container_name: demo
+    ports:
+      - 8080:3000
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "demo", "service": "demo"}]'
+      com.datadoghq.ad.init_configs: '[{}]'
+    links:
+      - datadog-agent:datadog-agent
+    volumes:
+      - demo-target:/src/target
+      - cargo-registry:/usr/local/cargo/registry
+      - cargo-bin:/usr/local/cargo/bin
+      - .:/src
+  datadog-agent:
+    image: datadog/agent:7
+    container_name: datadog-agent
+    environment:
+      - DD_API_KEY=<DATADOG_API_KEY>
+      - DD_LOGS_ENABLED=true
+      - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
+      - DD_AC_EXCLUDE="name:datadog-agent"
+      # disable if you don't use ap1 region
+      - DD_SITE=ap1.datadoghq.com
+    volumes:
+      # for macOS
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      # Add the path /opt/datadog-agent/run under Docker Desktop -> Settings -> Resources -> File sharing.
+      # https://docs.datadoghq.com/containers/docker/log/?tab=containerinstallation
+      - /opt/datadog-agent/run:/opt/datadog-agent/run:rw
+
+volumes:
+  cargo-bin:
+  cargo-registry:
+  demo-target:
